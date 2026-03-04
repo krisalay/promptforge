@@ -28,25 +28,29 @@ func (p *PromptForge) SavePrompt(ctx context.Context, prompt *domain.Prompt) err
 	if err := p.storage.SavePrompt(ctx, prompt); err != nil {
 		return err
 	}
-	return p.memCache.Remove(ctx, prompt.ID.String())
+	return p.memCache.Remove(ctx, prompt.Key)
 }
 
-func (p *PromptForge) Render(ctx context.Context, id string, vars map[string]string) (*domain.RenderedPrompt, error) {
-	promptCache, err := p.memCache.Get(ctx, id)
+func (p *PromptForge) Render(ctx context.Context, key string, vars map[string]string) (*domain.RenderedPrompt, error) {
+	promptCache, err := p.memCache.Get(ctx, key)
 	if err == nil {
 		return p.parseTmpl(ctx, promptCache, vars)
 	}
 
-	prompt, err := p.storage.GetPrompt(ctx, id)
+	prompt, err := p.storage.GetPrompt(ctx, key)
 	if err != nil {
 		return nil, err
 	}
 
-	tmpl, err := template.New(id).Parse(prompt.Template)
+	tmpl, err := template.New(key).Parse(prompt.Template)
 	if err != nil {
 		return nil, err
 	}
-	promptCache.Tmpl = tmpl
+	promptCache = &domain.PromptCache{
+		Model:  prompt.Model,
+		Tmpl:   tmpl,
+		Config: prompt.Config,
+	}
 
 	return p.parseTmpl(ctx, promptCache, vars)
 }
