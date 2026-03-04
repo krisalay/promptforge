@@ -45,7 +45,7 @@ func main() {
 			"Name": "Name",
 			"Age":  "Age",
 		},
-		Model: "gpt-4o-mini",
+		Model: domain.ModelGPT4oMini,
 		Config: map[string]any{
 			"temperature": 0.7,
 		},

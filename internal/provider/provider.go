@@ -2,6 +2,8 @@ package provider
 
 import (
 	"context"
+
+	"github.com/krisalay/promptforge/internal/domain"
 )
 
 type ProviderType string
@@ -11,7 +13,7 @@ const (
 )
 
 type ChatRequest struct {
-	Model        string
+	Model        domain.Model
 	SystemPrompt string
 	UserPrompt   string
 	Config       map[string]any

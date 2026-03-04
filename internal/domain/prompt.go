@@ -13,18 +13,18 @@ type Prompt struct {
 	Description string
 	Template    string
 	Variables   map[string]string
-	Model       string
+	Model       Model
 	Config      map[string]any
 }
 
 type PromptCache struct {
-	Model  string
+	Model  Model
 	Tmpl   *template.Template
 	Config map[string]any
 }
 
 type RenderedPrompt struct {
-	Model  string
+	Model  Model
 	Prompt string
 	Config map[string]any
 }
